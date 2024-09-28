@@ -1,0 +1,134 @@
+.hero-section {
+  transition: background-color 1.5s ease;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  z-index: 2;
+  text-align: center;
+  color: white;
+  padding: 20px;
+}
+
+.title {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.description {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.feature-highlight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.feature-icon {
+  margin-right: 15px;
+}
+
+.feature-text {
+  font-size: 2rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.action-button {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  text-decoration: none;
+  border-radius: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.action-button.primary {
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.action-button.secondary {
+  color: white;
+  background-color: transparent;
+  border: 2px solid white;
+}
+
+.action-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+}
+
+.background-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.icon-wrapper {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.2);
+  animation: shake 3s ease-in-out infinite;
+}
+
+.icon-wrapper:nth-child(1) { top: 10%; left: 10%; }
+.icon-wrapper:nth-child(2) { top: 20%; right: 20%; }
+.icon-wrapper:nth-child(3) { bottom: 15%; left: 25%; }
+.icon-wrapper:nth-child(4) { top: 40%; right: 10%; }
+.icon-wrapper:nth-child(5) { bottom: 10%; right: 15%; }
+
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(5px, 5px) rotate(5deg); }
+  75% { transform: translate(-5px, 5px) rotate(-5deg); }
+}
+
+
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .description {
+    font-size: 1.2rem;
+  }
+
+  .feature-text {
+    font-size: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .login-signup {
+    top: 10px;
+    right: 10px;
+  }
+
+  .login-signup span {
+    display: none;
+  }
+}
