@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
 import './UserDashboard.css';
+import config from '../config';
 
 const UserDashboard = () => {
   const { user, loading } = useAuth();
@@ -19,8 +20,8 @@ const UserDashboard = () => {
 
   const fetchUserData = async () => {
     try {
-      const createdGroupsRes = await fetch(`http://localhost:5000/api/groups?creator=${user._id}`);
-      const joinedGroupsRes = await fetch(`http://localhost:5000/api/groups?member=${user._id}`);
+      const createdGroupsRes = await fetch(`${config.apiBaseUrl}/api/groups?creator=${user._id}`);
+      const joinedGroupsRes = await fetch(`${config.apiBaseUrl}/api/groups?member=${user._id}`);
 
       if (!createdGroupsRes.ok || !joinedGroupsRes.ok) {
         throw new Error('Failed to fetch user data');

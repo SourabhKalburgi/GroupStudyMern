@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Users as UsersIcon, Star } from 'lucide-react';
 import './ExploreGroups.css';
+import config from '../config';
 
 const ExploreGroups = ({ limit = 3 }) => {
   const [groups, setGroups] = useState([]);
@@ -12,7 +13,7 @@ const ExploreGroups = ({ limit = 3 }) => {
     const fetchGroups = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/groups');
+        const response = await fetch(`${config.apiBaseUrl}//api/groups`);
         if (!response.ok) {
           throw new Error('Failed to fetch groups');
         }

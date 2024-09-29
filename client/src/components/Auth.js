@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
+import config from '../config';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -38,7 +39,7 @@ const Auth = () => {
 
     if (!validateForm()) return;
 
-    const endpoint = isLogin ? 'http://localhost:5000/api/auth/login' : 'http://localhost:5000/api/auth/register';
+    const endpoint = isLogin ? `${config.apiBaseUrl}/api/auth/login`  : `${config.apiBaseUrl}/api/auth/register`;
     const body = isLogin ? { email, password } : { username, email, password };
 
     try {

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { UsersIcon, Star, Camera, Mic, ArrowLeft, X } from 'lucide-react';
 import { Layout } from './Layout';
 import './GroupDetail.css';
+import config from '../config';
 
 const Alert = ({ children, onClose }) => (
   <div className="alert">
@@ -23,7 +24,7 @@ const GroupDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/groups/${id}`)
+    fetch(`${config.apiBaseUrl}//api/groups/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch group: ${response.status} ${response.statusText}`);
@@ -43,7 +44,7 @@ const GroupDetail = () => {
 
   const handleJoin = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/groups/${id}/join`, {
+      const response = await fetch(`${config.apiBaseUrl}/api/groups/${id}/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ const GroupDetail = () => {
 
   const handleLeave = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/groups/${id}/leave`, {
+      const response = await fetch(`${config.apiBaseUrl}/api/groups/${id}/leave`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

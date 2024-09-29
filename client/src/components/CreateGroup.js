@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
 import './CreateGroup.css';
+import config from '../config';
 
 const CreateGroup = () => {
   const [groupData, setGroupData] = useState({
@@ -27,7 +28,7 @@ const CreateGroup = () => {
     }
   
     try {
-      const response = await fetch('http://localhost:5000/api/groups', {
+      const response = await fetch(`${config.apiBaseUrl}//api/groups`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
