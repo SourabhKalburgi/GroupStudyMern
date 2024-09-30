@@ -20,7 +20,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true // Allows cookies and other credentials to be passed
 }));
-
+const corsOptions = {
+  origin: ['https://groupstudymernui.onrender.com', 'http://localhost:3000'],
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 // Import and use routes
 app.use('/api/auth', authRoutes);
