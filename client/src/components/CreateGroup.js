@@ -28,7 +28,7 @@ const CreateGroup = () => {
     }
   
     try {
-      const response = await fetch(`${config.apiBaseUrl}//api/groups`, {
+      const response = await fetch(`${config.apiBaseUrl}/api/groups`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

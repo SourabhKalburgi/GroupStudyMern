@@ -70,7 +70,7 @@ const Footer = () => {
   return (
     <footer className="app-footer">
       <div className="footer-content">
-        <p>&copy; 2024 TutorConnect. All rights reserved.</p>
+        <p>&copy; 2024 Group Study App. All rights reserved.</p>
         <nav>
           <Link to="/about">About</Link>
           <Link to="/contact">Contact</Link>

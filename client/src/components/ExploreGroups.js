@@ -13,7 +13,7 @@ const ExploreGroups = ({ limit = 3 }) => {
     const fetchGroups = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${config.apiBaseUrl}//api/groups`);
+        const response = await fetch(`${config.apiBaseUrl}/api/groups`);
         if (!response.ok) {
           throw new Error('Failed to fetch groups');
         }

@@ -24,7 +24,7 @@ const GroupDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${config.apiBaseUrl}//api/groups/${id}`)
+    fetch(`${config.apiBaseUrl}/api/groups/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch group: ${response.status} ${response.statusText}`);
@@ -184,9 +184,12 @@ const GroupDetail = () => {
             <div className="section resources-section">
               <h2 className="section-title">Resources</h2>
               <ul className="resources-list">
-                <li><a href="#" className="resource-link">Group Guidelines</a></li>
-                <li><a href="#" className="resource-link">Shared Documents</a></li>
-                <li><a href="#" className="resource-link">Meeting Schedule</a></li>
+                <ul className="resources-list">
+                  <li><a href={group.guidelinesLink || '#'} className="resource-link">Group Guidelines</a></li>
+                  <li><a href={group.documentsLink || '#'} className="resource-link">Shared Documents</a></li>
+                  <li><a href={group.scheduleLink || '#'} className="resource-link">Meeting Schedule</a></li>
+                </ul>
+
               </ul>
             </div>
           </>

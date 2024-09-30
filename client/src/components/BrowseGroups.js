@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Heart, Users as UsersIcon, Star, Search, Plus } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Heart, Users as UsersIcon, Star, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
 import './BrowseGroups.css';
 import config from '../config';
@@ -21,7 +21,7 @@ const BrowseGroups = ({ limit, showFilters = true }) => {
   const fetchGroups = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${config.apiBaseUrl}//api/groups`);
+      const response = await fetch(`${config.apiBaseUrl}/api/groups`);
       if (!response.ok) {
         throw new Error('Failed to fetch groups');
       }

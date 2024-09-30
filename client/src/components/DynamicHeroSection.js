@@ -1,6 +1,6 @@
   import React, { useState, useEffect } from 'react';
   import { Link } from 'react-router-dom';
-  import { Video, Calendar, Book, Lightbulb, Users, Calculator, Atom, Rocket, PenTool, Menu, LogIn } from 'lucide-react';
+  import { Video, Calendar, Book, Lightbulb, Users, Calculator, Atom, Rocket, PenTool } from 'lucide-react';
   import { motion, AnimatePresence } from 'framer-motion';
   import './DynamicHeroSection.css';
 
@@ -64,7 +64,7 @@
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            TutorConnect
+            Group Study App
           </motion.h1>
           <motion.p 
             className="description"

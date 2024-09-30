@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import config from '../config';
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
@@ -19,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/user', {
+      const response = await fetch(`${config.apiBaseUrl}/api/auth/user`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
