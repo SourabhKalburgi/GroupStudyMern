@@ -20,11 +20,13 @@
   font-size: 4rem;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  color: white;
 }
 
 .description {
   font-size: 1.5rem;
   margin-bottom: 30px;
+  color: white;
 }
 
 .feature-highlight {
@@ -42,35 +44,38 @@
   font-size: 2rem;
 }
 
-.button-group {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    height: 100px;
+  }
+  
 
-.action-button {
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  text-decoration: none;
-  border-radius: 30px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  .action-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
 
-.action-button.primary {
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
+  .action-button.primary {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
 
-.action-button.secondary {
-  color: white;
-  background-color: transparent;
-  border: 2px solid white;
-}
+  .action-button.secondary {
+    color: white;
+    background-color: transparent;
+    border: 2px solid white;
+  }
 
-.action-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 8px rgba(0,0,0,0.2);
-}
+  .action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+  }
 
 .background-icons {
   position: absolute;
@@ -99,8 +104,6 @@
   75% { transform: translate(-5px, 5px) rotate(-5deg); }
 }
 
-
-
 @media (max-width: 768px) {
   .title {
     font-size: 3rem;
@@ -116,11 +119,14 @@
 
   .button-group {
     flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 50px;
   }
 
   .action-button {
-    width: 100%;
-    margin-bottom: 10px;
+    width: 80%;
+    margin-bottom: 15px;
   }
 
   .login-signup {
