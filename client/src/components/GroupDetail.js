@@ -4,6 +4,7 @@ import { UsersIcon, Star, Camera, Mic, ArrowLeft, X } from 'lucide-react';
 import { Layout } from './Layout';
 import './GroupDetail.css';
 import config from '../config';
+import Modal from './Modal';
 
 const Alert = ({ children, onClose }) => (
   <div className="alert">
@@ -21,6 +22,7 @@ const GroupDetail = () => {
   const [error, setError] = useState(null);
   const [joined, setJoined] = useState(false);
   const [showJoinAlert, setShowJoinAlert] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false); // State for modal
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,28 +44,32 @@ const GroupDetail = () => {
       });
   }, [id]);
 
-  const handleJoin = async () => {
-    try {
-      const response = await fetch(`${config.apiBaseUrl}/api/groups/${id}/join`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Adjust for your auth method
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to join the group');
-      }
-
-      const updatedGroup = await response.json();
-      setJoined(true);
-      setGroup(updatedGroup); // Update the group state to reflect the new members
-      setShowJoinAlert(true);
-      setTimeout(() => setShowJoinAlert(false), 3000);
-    } catch (error) {
-      setError(error.message);
+  const handleJoin = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Show modal instead of error
+      setShowAuthModal(true);
+      return;
     }
+
+    // If logged in, proceed to join the group
+    fetch(`${config.apiBaseUrl}/api/groups/${id}/join`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((updatedGroup) => {
+        setJoined(true);
+        setGroup(updatedGroup); // Update group state
+        setShowJoinAlert(true);
+        setTimeout(() => setShowJoinAlert(false), 3000);
+      })
+      .catch(() => {
+        // Handle error if any
+      });
   };
 
   const handleLeave = async () => {
@@ -181,20 +187,25 @@ const GroupDetail = () => {
               ></textarea>
               <button className="button post-button">Post</button>
             </div>
+
             <div className="section resources-section">
               <h2 className="section-title">Resources</h2>
               <ul className="resources-list">
-                <ul className="resources-list">
-                  <li><a href={group.guidelinesLink || '#'} className="resource-link">Group Guidelines</a></li>
-                  <li><a href={group.documentsLink || '#'} className="resource-link">Shared Documents</a></li>
-                  <li><a href={group.scheduleLink || '#'} className="resource-link">Meeting Schedule</a></li>
-                </ul>
-
+                <li><a href={group.guidelinesLink || '#'} className="resource-link">Group Guidelines</a></li>
+                <li><a href={group.documentsLink || '#'} className="resource-link">Shared Documents</a></li>
+                <li><a href={group.scheduleLink || '#'} className="resource-link">Meeting Schedule</a></li>
               </ul>
             </div>
           </>
         )}
       </div>
+
+      {/* Modal to prompt login/signup */}
+      <Modal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={() => navigate('/auth')}
+      />
     </Layout>
   );
 };
