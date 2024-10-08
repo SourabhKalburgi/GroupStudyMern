@@ -194,10 +194,13 @@
     flex-direction: column;
   }
 
+
   .search-filter-section,
   .groups-grid {
-    width: 100%;
+    width: 80%;
+    margin: 0 auto;
   }
+
 
   .search-filter-section {
     position: static;

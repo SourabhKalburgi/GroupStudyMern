@@ -15,7 +15,7 @@ const Modal = ({ isOpen, onClose, onLogin }) => {
           <X size={20} />
         </button>
         <h2>Please Log in or Sign up</h2>
-        <p>You need to be logged in to join this group.</p>
+        <p>You need to be logged in to complete this action</p>
         <div className="modal-actions">
           <button className="button" onClick={onLogin}>
             Login/Signup

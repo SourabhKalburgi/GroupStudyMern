@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
+import Modal from './Modal'; // Import the Modal component
 import './CreateGroup.css';
 import config from '../config';
 
@@ -11,6 +12,7 @@ const CreateGroup = () => {
     icon: '',
   });
   const [error, setError] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,28 +21,28 @@ const CreateGroup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const token = localStorage.getItem('token'); // Get token from localStorage
-    
+
+    const token = localStorage.getItem('token');
+
     if (!token) {
-      setError('No token, authorization denied');
+      setShowAuthModal(true);
       return;
     }
-  
+
     try {
       const response = await fetch(`${config.apiBaseUrl}/api/groups`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Include token in the Authorization header
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(groupData),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to create group');
       }
-  
+
       const result = await response.json();
       console.log('Group created:', result);
       navigate('/browse-groups');
@@ -48,12 +50,11 @@ const CreateGroup = () => {
       setError('Error creating group: ' + error.message);
     }
   };
-  
 
   return (
     <Layout>
       <div className="create-group-container">
-      <h1 className="browse-groups-title">Create Group</h1>
+        <h1 className="browse-groups-title">Create Group</h1>
         {error && (
           <div className="error-message">
             {error}
@@ -104,6 +105,12 @@ const CreateGroup = () => {
           </button>
         </form>
       </div>
+
+      <Modal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={() => navigate('/auth')}
+      />
     </Layout>
   );
 };

@@ -19,7 +19,7 @@
     width: 100%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    position: relative; /* Make modal relative for proper button positioning */
+    position: relative; 
   }
   
   .modal-close-button {
@@ -33,7 +33,7 @@
   
   .modal-actions {
     display: flex;
-    justify-content: space-between; /* Ensure buttons are spaced */
+    justify-content: space-between; 
     margin-top: 20px;
   }
   
@@ -41,7 +41,7 @@
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-    background-color: #007BFF; /* Blue button color */
+    background-color: #007BFF;
     color: white;
     border-radius: 5px;
     text-align: center;
@@ -55,6 +55,6 @@
   
   .back-button-align {
     display: inline-block;
-    margin-left: auto; /* Ensures the back button is aligned to the right */
+    margin-left: auto; 
   }
   

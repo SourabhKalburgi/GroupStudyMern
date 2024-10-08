@@ -111,3 +111,8 @@
       padding: 2rem 2.5rem;
     }
   }
+  @media (max-width: 640px) {
+    .form-group input {
+      width: 90% !important;
+    }
+  }

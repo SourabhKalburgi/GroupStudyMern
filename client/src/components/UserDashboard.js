@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
+import Modal from './Modal';
 import './UserDashboard.css';
 import config from '../config';
 
@@ -10,13 +11,17 @@ const UserDashboard = () => {
   const [createdGroups, setCreatedGroups] = useState([]);
   const [joinedGroups, setJoinedGroups] = useState([]);
   const [error, setError] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       fetchUserData();
+    } else if (!loading) {
+      // If not loading and no user, show the auth modal
+      setShowAuthModal(true);
     }
-  }, [user]);
+  }, [user, loading]);
 
   const fetchUserData = async () => {
     try {
@@ -44,39 +49,51 @@ const UserDashboard = () => {
     <Layout>
       <div className="dashboard-container">
         <h1>User Dashboard</h1>
-        
-        <div className="dashboard-section">
-          <h2>Groups You've Created</h2>
-          {createdGroups.length > 0 ? (
-            <ul>
-              {createdGroups.map(group => (
-                <li key={group._id}>
-                  {group.name}
-                  <button onClick={() => navigate(`/group/${group._id}`)}>View Group</button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>You haven't created any groups yet.</p>
-          )}
-        </div>
 
-        <div className="dashboard-section">
-          <h2>Groups You've Joined</h2>
-          {joinedGroups.length > 0 ? (
-            <ul>
-              {joinedGroups.map(group => (
-                <li key={group._id}>
-                  {group.name}
-                  <button onClick={() => navigate(`/group/${group._id}`)}>View Group</button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>You haven't joined any groups yet.</p>
-          )}
-        </div>
+        {user ? (
+          <>
+            <div className="dashboard-section">
+              <h2>Groups You've Created</h2>
+              {createdGroups.length > 0 ? (
+                <ul>
+                  {createdGroups.map(group => (
+                    <li key={group._id}>
+                      {group.name}
+                      <button onClick={() => navigate(`/group/${group._id}`)}>View Group</button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>You haven't created any groups yet.</p>
+              )}
+            </div>
+
+            <div className="dashboard-section">
+              <h2>Groups You've Joined</h2>
+              {joinedGroups.length > 0 ? (
+                <ul>
+                  {joinedGroups.map(group => (
+                    <li key={group._id}>
+                      {group.name}
+                      <button onClick={() => navigate(`/group/${group._id}`)}>View Group</button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>You haven't joined any groups yet.</p>
+              )}
+            </div>
+          </>
+        ) : (
+          <p>Please log in to view your dashboard.</p>
+        )}
       </div>
+
+      <Modal
+        isOpen={showAuthModal}
+        onClose={() => navigate('/')}
+        onLogin={() => navigate('/auth')}
+      />
     </Layout>
   );
 };

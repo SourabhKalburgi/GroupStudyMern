@@ -16,7 +16,7 @@ const Home = () => {
           <div className="explore-dashboard-content">
             <h2>Explore Your Dashboard</h2>
             <p>Personalize your learning experience, track your progress, and connect with study buddies.</p>
-            <Link to="/dashboard" className="explore-dashboard-button">
+            <Link to="/user-dashboard" className="explore-dashboard-button">
               <Compass size={20} />
               Go to Dashboard
             </Link>
