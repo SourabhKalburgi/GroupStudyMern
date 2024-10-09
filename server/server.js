@@ -16,19 +16,21 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000', // Allow requests from the React app in production or localhost
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // Allows cookies and other credentials to be passed
-}));
 const corsOptions = {
-  origin: ['https://groupstudymernui.onrender.com', 'https://groupstudymern.onrender.com', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  origin: ['https://groupstudymernui.onrender.com', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin'],
+  credentials: true,
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
+
+// Handle preflight requests
 app.options('*', cors(corsOptions));
+
+
+
 // Import and use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes); // Make sure this is used

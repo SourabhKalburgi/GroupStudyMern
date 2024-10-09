@@ -45,8 +45,12 @@ const Auth = () => {
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Origin': 'https://groupstudymernui.onrender.com'
+        },
         body: JSON.stringify(body),
+        mode: 'cors',
         credentials: 'include'
       });
   
