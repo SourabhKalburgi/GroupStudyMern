@@ -26,8 +26,9 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 };
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 // Import and use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes); // Make sure this is used

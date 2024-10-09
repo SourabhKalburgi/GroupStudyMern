@@ -36,35 +36,31 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
+  
     if (!validateForm()) return;
-
-    const endpoint = isLogin ? `${config.apiBaseUrl}/api/auth/login`  : `${config.apiBaseUrl}/api/auth/register`;
-    const body = isLogin ? { email, password } : { username, email, password };
-
+  
+    const endpoint = `${config.apiBaseUrl}/api/auth/register`;
+    const body = { username, email, password };
+  
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
+        credentials: 'include'
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (isLogin) {
-          login(data.token, data.userId);
-          navigate('/');
-        } else {
-          setIsLogin(true);
-          setError('Registration successful. Please log in.');
-        }
-      } else {
+  
+      if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.message || 'An error occurred. Please try again.');
+        throw new Error(errorData.message || 'Registration failed');
       }
+  
+      const data = await response.json();
+      setIsLogin(true);
+      setError('Registration successful. Please log in.');
     } catch (error) {
       console.error('Auth error:', error);
-      setError('An unexpected error occurred. Please try again later.');
+      setError(error.message || 'An unexpected error occurred. Please try again later.');
     }
   };
 
