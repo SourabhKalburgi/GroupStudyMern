@@ -22,7 +22,7 @@ app.use(cors({
   credentials: true // Allows cookies and other credentials to be passed
 }));
 const corsOptions = {
-  origin: ['https://groupstudymernui.onrender.com', 'http://localhost:3000'],
+  origin: ['https://groupstudymernui.onrender.com', 'https://groupstudymern.onrender.com', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 };
