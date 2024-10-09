@@ -39,30 +39,49 @@ const Auth = () => {
   
     if (!validateForm()) return;
   
-    const endpoint = `${config.apiBaseUrl}/api/auth/register`;
-    const body = { username, email, password };
+    // Restore login vs registration functionality
+    const endpoint = isLogin 
+      ? `${config.apiBaseUrl}/api/auth/login` 
+      : `${config.apiBaseUrl}/api/auth/register`;
+      
+    const body = isLogin 
+      ? { email, password } 
+      : { username, email, password };
   
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Origin': 'https://groupstudymernui.onrender.com' // Keep if necessary for CORS
+        },
         body: JSON.stringify(body),
+        mode: 'cors',
         credentials: 'include'
       });
   
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Registration failed');
+        throw new Error(errorData.message || (isLogin ? 'Login failed' : 'Registration failed'));
       }
   
       const data = await response.json();
-      setIsLogin(true);
-      setError('Registration successful. Please log in.');
+  
+      if (isLogin) {
+        login(data.token, data.userId);  // Assuming you have a `login` function
+        navigate('/');  // Assuming `navigate` is defined for redirection
+      } else {
+        setIsLogin(true);  // Switch to login form after registration
+        setError('Registration successful. Please log in.');
+      }
+  
     } catch (error) {
       console.error('Auth error:', error);
       setError(error.message || 'An unexpected error occurred. Please try again later.');
     }
   };
+  
+  
 
   return (
     <div className="auth-container">
