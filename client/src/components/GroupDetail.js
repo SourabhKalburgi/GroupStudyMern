@@ -22,10 +22,10 @@ const GroupDetail = () => {
   const [error, setError] = useState(null);
   const [joined, setJoined] = useState(false);
   const [showJoinAlert, setShowJoinAlert] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false); // State for modal
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [forumPosts, setForumPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
-  const [newAnswer, setNewAnswer] = useState('');
+  const [newAnswers, setNewAnswers] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,17 +46,17 @@ const GroupDetail = () => {
         setLoading(false);
       });
 
-      const fetchForumPosts = async () => {
-        try {
-          const response = await fetch(`${config.apiBaseUrl}/api/forum/group/${id}`);
-          const data = await response.json();
-          setForumPosts(data);
-        } catch (error) {
-          console.error('Error fetching forum posts:', error);
-        }
-      };
-  
-      fetchForumPosts();
+    const fetchForumPosts = async () => {
+      try {
+        const response = await fetch(`${config.apiBaseUrl}/api/forum/group/${id}`);
+        const data = await response.json();
+        setForumPosts(data);
+      } catch (error) {
+        console.error('Error fetching forum posts:', error);
+      }
+    };
+
+    fetchForumPosts();
   }, [id]);
 
   const handleJoin = () => {
@@ -146,13 +146,13 @@ const GroupDetail = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ content: newAnswer }),
+        body: JSON.stringify({ content: newAnswers }),
       });
       const data = await response.json();
-      setForumPosts(forumPosts.map(post => 
+      setForumPosts(forumPosts.map(post =>
         post._id === postId ? data : post
       ));
-      setNewAnswer('');
+      setNewAnswers('');
     } catch (error) {
       console.error('Error adding answer:', error);
     }
@@ -235,49 +235,55 @@ const GroupDetail = () => {
             </div>
 
             <div className="section forum-section">
-            <h2 className="section-title">Discussion Forum</h2>
-            <form onSubmit={handlePostSubmit}>
-              <textarea
-                className="forum-textarea"
-                rows="3"
-                placeholder="Ask a question (max 150 words)..."
-                value={newPost}
-                onChange={(e) => setNewPost(e.target.value)}
-                maxLength={150 * 5} // Approximate 150 words
-              ></textarea>
-              <button type="submit" className="button post-button">Post</button>
-            </form>
+              <h2 className="section-title">Discussion Forum</h2>
+              <form onSubmit={handlePostSubmit}>
+                <textarea
+                  className="forum-textarea"
+                  rows="3"
+                  placeholder="Ask a question (max 150 words)..."
+                  value={newPost}
+                  onChange={(e) => setNewPost(e.target.value)}
+                  maxLength={150 * 5}
+                ></textarea>
+                <button type="submit" className="button post-button">Post</button>
+              </form>
 
-            <div className="forum-posts">
-              {forumPosts.map((post) => (
-                <div key={post._id} className="forum-post">
-                  <h3>{post.author.username}</h3>
-                  <p>{post.content}</p>
-                  <h4>Answers:</h4>
-                  {post.answers.map((answer, index) => (
-                    <div key={index} className="forum-answer">
-                      <h5>{answer.author.username}</h5>
-                      <p>{answer.content}</p>
+              <div className="forum-posts" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                {forumPosts.slice(0, 3).map((post) => (
+                  <div key={post._id} className="forum-post">
+                    <div className="post-header">
+                      <div className="user-icon">{post.author.username[0].toUpperCase()}</div>
+                      <h3>{post.author.username}</h3>
                     </div>
-                  ))}
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    handleAnswerSubmit(post._id);
-                  }}>
-                    <textarea
-                      className="answer-textarea"
-                      rows="3"
-                      placeholder="Add an answer (max 400 words)..."
-                      value={newAnswer}
-                      onChange={(e) => setNewAnswer(e.target.value)}
-                      maxLength={400 * 5} // Approximate 400 words
-                    ></textarea>
-                    <button type="submit" className="button answer-button">Answer</button>
-                  </form>
-                </div>
-              ))}
+                    <p>{post.content}</p>
+                    <h4>Answers:</h4>
+                    {post.answers.map((answer, index) => (
+                      <div key={index} className="forum-answer">
+                        <div className="answer-header">
+                          <div className="user-icon">{answer.author?.username?.[0].toUpperCase() || 'U'}</div>
+                          <h5>{answer.author?.username || 'Unknown User'}</h5>
+                        </div>
+                        <p>{answer.content}</p>
+                      </div>
+                    ))}
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      handleAnswerSubmit(post._id);
+                    }}>
+                      <textarea
+                        className="answer-textarea"
+                        rows="3"
+                        placeholder="Add an answer (max 400 words)..."
+                        value={newAnswers[post._id] || ''}
+                        onChange={(e) => setNewAnswers(prev => ({ ...prev, [post._id]: e.target.value }))}
+                        maxLength={400 * 5}
+                      ></textarea>
+                      <button type="submit" className="button answer-button">Answer</button>
+                    </form>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
             <div className="section resources-section">
               <h2 className="section-title">Resources</h2>
