@@ -23,6 +23,9 @@ const GroupDetail = () => {
   const [joined, setJoined] = useState(false);
   const [showJoinAlert, setShowJoinAlert] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false); // State for modal
+  const [forumPosts, setForumPosts] = useState([]);
+  const [newPost, setNewPost] = useState('');
+  const [newAnswer, setNewAnswer] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +45,18 @@ const GroupDetail = () => {
         setError(error.message);
         setLoading(false);
       });
+
+      const fetchForumPosts = async () => {
+        try {
+          const response = await fetch(`${config.apiBaseUrl}/api/forum/group/${id}`);
+          const data = await response.json();
+          setForumPosts(data);
+        } catch (error) {
+          console.error('Error fetching forum posts:', error);
+        }
+      };
+  
+      fetchForumPosts();
   }, [id]);
 
   const handleJoin = () => {
@@ -102,6 +117,47 @@ const GroupDetail = () => {
     { id: 1, title: "Weekly Check-in", date: "2024-09-20", time: "14:00" },
     { id: 2, title: "Project Review", date: "2024-09-25", time: "10:00" },
   ];
+
+
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/api/forum`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ groupId: id, content: newPost }),
+      });
+      const data = await response.json();
+      setForumPosts([data, ...forumPosts]);
+      setNewPost('');
+    } catch (error) {
+      console.error('Error creating forum post:', error);
+    }
+  };
+
+  const handleAnswerSubmit = async (postId) => {
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/api/forum/${postId}/answer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ content: newAnswer }),
+      });
+      const data = await response.json();
+      setForumPosts(forumPosts.map(post => 
+        post._id === postId ? data : post
+      ));
+      setNewAnswer('');
+    } catch (error) {
+      console.error('Error adding answer:', error);
+    }
+  };
+
 
   return (
     <Layout>
@@ -179,14 +235,49 @@ const GroupDetail = () => {
             </div>
 
             <div className="section forum-section">
-              <h2 className="section-title">Discussion Forum</h2>
+            <h2 className="section-title">Discussion Forum</h2>
+            <form onSubmit={handlePostSubmit}>
               <textarea
                 className="forum-textarea"
                 rows="3"
-                placeholder="Ask a question or start a discussion..."
+                placeholder="Ask a question (max 150 words)..."
+                value={newPost}
+                onChange={(e) => setNewPost(e.target.value)}
+                maxLength={150 * 5} // Approximate 150 words
               ></textarea>
-              <button className="button post-button">Post</button>
+              <button type="submit" className="button post-button">Post</button>
+            </form>
+
+            <div className="forum-posts">
+              {forumPosts.map((post) => (
+                <div key={post._id} className="forum-post">
+                  <h3>{post.author.username}</h3>
+                  <p>{post.content}</p>
+                  <h4>Answers:</h4>
+                  {post.answers.map((answer, index) => (
+                    <div key={index} className="forum-answer">
+                      <h5>{answer.author.username}</h5>
+                      <p>{answer.content}</p>
+                    </div>
+                  ))}
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleAnswerSubmit(post._id);
+                  }}>
+                    <textarea
+                      className="answer-textarea"
+                      rows="3"
+                      placeholder="Add an answer (max 400 words)..."
+                      value={newAnswer}
+                      onChange={(e) => setNewAnswer(e.target.value)}
+                      maxLength={400 * 5} // Approximate 400 words
+                    ></textarea>
+                    <button type="submit" className="button answer-button">Answer</button>
+                  </form>
+                </div>
+              ))}
             </div>
+          </div>
 
             <div className="section resources-section">
               <h2 className="section-title">Resources</h2>

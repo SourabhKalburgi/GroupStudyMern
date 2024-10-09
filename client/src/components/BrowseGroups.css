@@ -193,6 +193,10 @@
   .browse-groups-content {
     flex-direction: column;
   }
+  .browse-group-card {
+    width: 90%;
+    margin: 0 auto;
+}
 
 
   .search-filter-section,
