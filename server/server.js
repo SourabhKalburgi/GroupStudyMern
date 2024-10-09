@@ -17,19 +17,20 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: process.env.CLIENT_URL || 'http://localhost:3000', // Allow requests from the React app in production or localhost
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true 
+  credentials: true // Allows cookies and other credentials to be passed
 }));
 const corsOptions = {
   origin: ['https://groupstudymernui.onrender.com', 'http://localhost:3000'],
-  optionsSuccessStatus: 200
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 };
 app.use(cors(corsOptions));
 
 // Import and use routes
 app.use('/api/auth', authRoutes);
-app.use('/api/groups', groupRoutes); 
+app.use('/api/groups', groupRoutes); // Make sure this is used
 app.use('/api/forum', forumRoutes);
 
 const PORT = process.env.PORT || 5000;
