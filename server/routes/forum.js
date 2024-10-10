@@ -32,38 +32,35 @@ router.get('/group/:groupId', async (req, res) => {
   }
 });
 
-// Add an answer to a forum post
-router.post('/:postId/answer', authMiddleware, async (req, res) => {
+const handleAnswerSubmit = async (postId) => {
   try {
-    const { content } = req.body;
-
-    // Validate content type
-    if (typeof content !== 'string') {
-      return res.status(400).json({ message: 'Content must be a string' });
+    const content = newAnswers[postId]; // Extract content for the specific post ID
+    
+    if (!content) {
+      console.error("Answer content is empty.");
+      return;
     }
 
-    const post = await ForumPost.findById(req.params.postId);
-    if (!post) {
-      return res.status(404).json({ message: 'Forum post not found' });
-    }
-
-    post.answers.push({
-      author: req.user.userId,
-      content
+    const response = await fetch(`${config.apiBaseUrl}/api/forum/${postId}/answer`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ content }), // Send only the content
     });
 
-    await post.save();
+    const data = await response.json();
+    setForumPosts(forumPosts.map(post =>
+      post._id === postId ? data : post
+    ));
 
-    const populatedPost = await ForumPost.findById(post._id)
-      .populate('author', 'username')
-      .populate('answers.author', 'username');
-
-    res.status(201).json(populatedPost);
+    setNewAnswers(prev => ({ ...prev, [postId]: '' })); // Reset the answer field
   } catch (error) {
     console.error('Error adding answer:', error);
-    res.status(500).json({ message: 'Error adding answer', error: error.message });
   }
-});
+};
+
 
 
 module.exports = router;

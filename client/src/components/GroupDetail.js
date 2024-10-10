@@ -257,15 +257,13 @@ const GroupDetail = () => {
                     </div>
                     <p>{post.content}</p>
                     <h4>Answers:</h4>
-                    {post.answers.map((answer, index) => (
-                      <div key={index} className="forum-answer">
-                        <div className="answer-header">
-                          <div className="user-icon">{answer.author?.username?.[0].toUpperCase() || 'U'}</div>
-                          <h5>{answer.author?.username || 'Unknown User'}</h5>
-                        </div>
-                        <p>{answer.content}</p>
+                    {post.answers.map(answer => (
+                      <div key={answer._id}>
+                        {answer.author?.username ? answer.author.username : 'Unknown User'}: {answer.content}
                       </div>
                     ))}
+
+
                     <form onSubmit={(e) => {
                       e.preventDefault();
                       handleAnswerSubmit(post._id);
