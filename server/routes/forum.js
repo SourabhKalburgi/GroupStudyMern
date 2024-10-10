@@ -34,28 +34,36 @@ router.get('/group/:groupId', async (req, res) => {
 
 // Add an answer to a forum post
 router.post('/:postId/answer', authMiddleware, async (req, res) => {
-    try {
-      const { content } = req.body;
-      const post = await ForumPost.findById(req.params.postId);
-      if (!post) {
-        return res.status(404).json({ message: 'Forum post not found' });
-      }
-      post.answers.push({
-        author: req.user.userId,
-        content
-      });
-      await post.save();
-      
-      // Populate the author field of the new answer
-      const populatedPost = await ForumPost.findById(post._id)
-        .populate('author', 'username')
-        .populate('answers.author', 'username');
-      
-      res.status(201).json(populatedPost);
-    } catch (error) {
-      console.error('Error adding answer:', error);
-      res.status(500).json({ message: 'Error adding answer', error: error.message });
+  try {
+    const { content } = req.body;
+
+    // Validate content type
+    if (typeof content !== 'string') {
+      return res.status(400).json({ message: 'Content must be a string' });
     }
-  });
+
+    const post = await ForumPost.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Forum post not found' });
+    }
+
+    post.answers.push({
+      author: req.user.userId,
+      content
+    });
+
+    await post.save();
+
+    const populatedPost = await ForumPost.findById(post._id)
+      .populate('author', 'username')
+      .populate('answers.author', 'username');
+
+    res.status(201).json(populatedPost);
+  } catch (error) {
+    console.error('Error adding answer:', error);
+    res.status(500).json({ message: 'Error adding answer', error: error.message });
+  }
+});
+
 
 module.exports = router;
