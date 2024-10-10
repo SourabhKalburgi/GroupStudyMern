@@ -137,26 +137,35 @@ const GroupDetail = () => {
       console.error('Error creating forum post:', error);
     }
   };
-
   const handleAnswerSubmit = async (postId) => {
     try {
+      const content = newAnswers[postId]; // Extract content for the specific post ID
+      
+      if (!content) {
+        console.error("Answer content is empty.");
+        return;
+      }
+  
       const response = await fetch(`${config.apiBaseUrl}/api/forum/${postId}/answer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ content: newAnswers }),
+        body: JSON.stringify({ content }), // Send only the content
       });
+  
       const data = await response.json();
       setForumPosts(forumPosts.map(post =>
         post._id === postId ? data : post
       ));
-      setNewAnswers('');
+  
+      setNewAnswers(prev => ({ ...prev, [postId]: '' })); // Reset the answer field
     } catch (error) {
       console.error('Error adding answer:', error);
     }
   };
+  
 
 
   return (
