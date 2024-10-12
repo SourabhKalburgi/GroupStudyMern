@@ -8,7 +8,7 @@
     { text: "Live Video Chat", color: "#513B56", icon: Video },
     { text: "Smart Scheduling", color: "#525174", icon: Calendar },
     { text: "Interactive Whiteboard", color: "#348AA7", icon: Book },
-    { text: "AI Tutor Assist", color: "#4E598C", icon: Lightbulb },
+    // { text: "AI Tutor Assist", color: "#4E598C", icon: Lightbulb },
     { text: "Find Study Buddies", color: "#341C1C", icon: Users }
   ];
 

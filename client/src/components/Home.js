@@ -15,13 +15,14 @@ const Home = () => {
         <section className="explore-dashboard">
           <div className="explore-dashboard-content">
             <h2>Explore Your Dashboard</h2>
-            <p>Personalize your learning experience, track your progress, and connect with study buddies.</p>
+            <p>Take charge of your studies. Personalize your learning experience, monitor your achievements, and connect with study buddies easily.</p>
             <Link to="/user-dashboard" className="explore-dashboard-button">
-              <Compass size={20} />
+              <Compass size={24} className="dashboard-icon" />
               Go to Dashboard
             </Link>
           </div>
         </section>
+
       </div>
     </Layout>
   );
