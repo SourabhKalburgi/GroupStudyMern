@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { UsersIcon, Star, Camera, Mic, ArrowLeft, X } from 'lucide-react';
 import { Layout } from './Layout';
 import './GroupDetail.css';
 import config from '../config';
 import Modal from './Modal';
+import Jitsi from 'react-jitsi';
+
 
 const Alert = ({ children, onClose }) => (
   <div className="alert">
@@ -27,7 +29,23 @@ const GroupDetail = () => {
   const [newPost, setNewPost] = useState('');
   const [newAnswers, setNewAnswers] = useState({});
   const navigate = useNavigate();
+  // New state variables for Jitsi
+  const [showVideoSession, setShowVideoSession] = useState(false);
+  const [roomName, setRoomName] = useState('');
+  const [jitsiApi, setJitsiApi] = useState(null);
+  const handleJitsiError = useCallback((error) => {
+    console.error('Jitsi Error:', error);
+    setError('Failed to join video session. Please check your permissions and try again.');
+    setShowVideoSession(false);
+  }, []);
 
+  const handleJitsiReady = useCallback((api) => {
+    setJitsiApi(api);
+    api.executeCommand('displayName', localStorage.getItem('username'));
+    api.on('videoConferenceJoined', () => {
+      console.log('Local user joined');
+    });
+  }, []);
   useEffect(() => {
     fetch(`${config.apiBaseUrl}/api/groups/${id}`)
       .then((response) => {
@@ -140,12 +158,12 @@ const GroupDetail = () => {
   const handleAnswerSubmit = async (postId) => {
     try {
       const content = newAnswers[postId]; // Extract content for the specific post ID
-      
+
       if (!content) {
         console.error("Answer content is empty.");
         return;
       }
-  
+
       const response = await fetch(`${config.apiBaseUrl}/api/forum/${postId}/answer`, {
         method: 'POST',
         headers: {
@@ -154,20 +172,41 @@ const GroupDetail = () => {
         },
         body: JSON.stringify({ content }), // Send only the content
       });
-  
+
       const data = await response.json();
       setForumPosts(forumPosts.map(post =>
         post._id === postId ? data : post
       ));
-  
+
       setNewAnswers(prev => ({ ...prev, [postId]: '' })); // Reset the answer field
     } catch (error) {
       console.error('Error adding answer:', error);
     }
   };
-  
 
+  const startVideoSession = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/api/groups/${id}/video-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error('Failed to start video session');
+      }
+
+      const data = await response.json();
+      setRoomName(data.roomName);
+      setShowVideoSession(true);
+    } catch (error) {
+      console.error('Error starting video session:', error);
+      setError('Failed to start video session. Please try again.');
+    }
+  };
   return (
     <Layout>
       <div className="group-detail-container">
@@ -221,15 +260,46 @@ const GroupDetail = () => {
         {joined && (
           <>
             <div className="session-buttons">
-              <button className="button video-button">
+              <button className="button video-button" onClick={startVideoSession}>
                 <Camera size={20} className="button-icon" />
-                <span>Join Video Session</span>
+                <span>Start Video Session</span>
               </button>
               <button className="button voice-button">
                 <Mic size={20} className="button-icon" />
                 <span>Join Voice Session</span>
               </button>
             </div>
+            {showVideoSession && (
+              <div className="video-session-container">
+                <button className="close-video-button" onClick={() => {
+                  setShowVideoSession(false);
+                  localStorage.removeItem(`groupRoom_${id}`); // Clear cached room when closing
+                }}>
+                  Close Video Session
+                </button>
+                <Jitsi
+                  roomName={roomName}
+                  displayName={localStorage.getItem('username')}
+                  onAPILoad={handleJitsiReady}
+                  onError={handleJitsiError}
+                  containerStyle={{ width: '100%', height: '600px' }}
+                  config={{
+                    startWithAudioMuted: false,
+                    startWithVideoMuted: false,
+                    prejoinPageEnabled: false,
+                    disableDeepLinking: true,
+                  }}
+                  interfaceConfig={{
+                    SHOW_JITSI_WATERMARK: false,
+                    SHOW_WATERMARK_FOR_GUESTS: false,
+                    MOBILE_APP_PROMO: false,
+                    HIDE_INVITE_MORE_HEADER: true,
+                    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+                  }}
+                  jwt={localStorage.getItem('token')}
+                />
+              </div>
+            )}
 
             <div className="section upcoming-meetings-section">
               <h2 className="section-title">Upcoming Discussions</h2>

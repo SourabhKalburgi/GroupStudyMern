@@ -5,7 +5,7 @@ const connectDB = require('./config/db');
 const groupRoutes = require('./routes/groups');
 const authRoutes = require('./routes/auth');
 const forumRoutes = require('./routes/forum');
-
+const videoSessionRoutes = require('./routes/videoSessions');
 // Load environment variables from .env file
 dotenv.config();
 
@@ -17,7 +17,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 const corsOptions = {
-  origin: ['https://groupstudymernui.onrender.com', 'http://localhost:3000'],
+  origin: ['https://groupstudymernui.onrender.com', 'http://localhost:3000','http://localhost:5000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin'],
   credentials: true,
@@ -35,6 +35,7 @@ app.options('*', cors(corsOptions));
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes); // Make sure this is used
 app.use('/api/forum', forumRoutes);
+app.use('/api', videoSessionRoutes);
 
 const PORT = process.env.PORT || 5000;
 
