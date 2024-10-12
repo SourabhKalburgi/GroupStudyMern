@@ -64,7 +64,7 @@
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            Group Study App
+            StudyHive
           </motion.h1>
           <motion.p 
             className="description"
@@ -89,7 +89,7 @@
           </AnimatePresence>
           <div className="button-group">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to="/browse-groups" className="action-button primary" style={{ color: backgroundColor }}>Join a Group</Link>
+              <Link to="/browse-groups" className="action-button primary">Join a Group</Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link to="/create-group" className="action-button secondary">Create a Group</Link>

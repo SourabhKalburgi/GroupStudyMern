@@ -37,6 +37,7 @@ const Sidebar = () => {
   );
 };
 
+
 const UserCircle = () => {
   const navigate = useNavigate();
   const { isLoggedIn, user, loading } = useAuth();
