@@ -234,15 +234,15 @@ const GroupDetail = () => {
           <div className="group-stats">
             <div className="stat-item">
               <UsersIcon size={16} className="stat-icon users" />
-              <span>{group.members.length} members</span>
+              <span>{group.members.length}</span>
             </div>
             <div className="stat-item">
               <Star size={16} className="stat-icon heart" />
-              <span>{group.likes.length} likes</span>
+              <span>{group.likes.length} </span>
             </div>
             <div className="stat-item">
               <Star size={16} className="stat-icon star" />
-              <span>{group.averageRating ? group.averageRating.toFixed(1) : 'N/A'} rating</span>
+              <span>{group.averageRating ? group.averageRating.toFixed(1) : 'N/A'} </span>
             </div>
           </div>
 
@@ -347,15 +347,17 @@ const GroupDetail = () => {
                       e.preventDefault();
                       handleAnswerSubmit(post._id);
                     }}>
-                      <textarea
-                        className="answer-textarea"
-                        rows="3"
-                        placeholder="Add an answer (max 400 words)..."
-                        value={newAnswers[post._id] || ''}
-                        onChange={(e) => setNewAnswers(prev => ({ ...prev, [post._id]: e.target.value }))}
-                        maxLength={400 * 5}
-                      ></textarea>
-                      <button type="submit" className="button answer-button">Answer</button>
+                      <div class="answer-container">
+                        <textarea
+                          className="answer-textarea"
+                          rows="3"
+                          placeholder="Add an answer (max 400 words)..."
+                          value={newAnswers[post._id] || ''}
+                          onChange={(e) => setNewAnswers(prev => ({ ...prev, [post._id]: e.target.value }))}
+                          maxLength={400 * 5}
+                        ></textarea>
+                        <button type="submit" className="button answer-button">Answer</button>
+                      </div>
                     </form>
                   </div>
                 ))}

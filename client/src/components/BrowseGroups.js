@@ -33,6 +33,13 @@ const BrowseGroups = ({ limit, showFilters = true }) => {
       setLoading(false);
     }
   };
+  const truncateDescription = (description) => {
+    const words = description.split(' ');
+    if (words.length > 40) {
+      return words.slice(0, 10).join(' ') + '...';
+    }
+    return description;
+  };
 
   const filteredGroups = groups
     .filter((group) => {
@@ -109,7 +116,7 @@ const BrowseGroups = ({ limit, showFilters = true }) => {
                 <img src={group.icon || `/group-icons/pexels-cottonbro-4861373.jpg`} alt={group.name} className="browse-group-image" />
                 <div className="browse-group-card-content">
                   <h3 className="group-name">{group.name}</h3>
-                  <p className="group-description">{group.description || 'No description available'}</p>
+                  <p className="group-description"> {truncateDescription(group.description || 'No description available')}</p>
                   <div className="browse-group-stats">
                     <div className="stat">
                       <Heart size={16} className="stat-icon heart" />
