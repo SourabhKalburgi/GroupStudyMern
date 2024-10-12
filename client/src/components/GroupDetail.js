@@ -264,10 +264,10 @@ const GroupDetail = () => {
                 <Camera size={20} className="button-icon" />
                 <span>Start Video Session</span>
               </button>
-              <button className="button voice-button">
+              {/* <button className="button voice-button">
                 <Mic size={20} className="button-icon" />
                 <span>Join Voice Session</span>
-              </button>
+              </button> */}
             </div>
             {showVideoSession && (
               <div className="video-session-container">
