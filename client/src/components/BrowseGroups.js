@@ -96,18 +96,6 @@ const BrowseGroups = ({ limit, showFilters = true }) => {
                   <option value="rating">Rating</option>
                 </select>
               </div>
-              <div className="filter-group">
-                <label htmlFor="filter">Filter By</label>
-                <select
-                  id="filter"
-                  value={filterBy}
-                  onChange={(e) => setFilterBy(e.target.value)}
-                >
-                  <option value="all">All</option>
-                  <option value="popular">Popular</option>
-                  <option value="new">New</option>
-                </select>
-              </div>
             </div>
           )}
           <div className={`groups-grid ${!showFilters ? 'full-width' : ''}`}>

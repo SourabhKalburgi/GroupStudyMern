@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Home, Calendar, Book, Users } from 'lucide-react';
+import { Menu, X, Home, Users, Plus, BarChart, Lock} from 'lucide-react';
 import './Layout.css';
 import { useAuth } from '../context/AuthContext';
 
@@ -10,9 +10,10 @@ const Sidebar = () => {
 
   const features = [
     { text: "Home", icon: Home, path: "/" },
-    { text: "Join a group", icon: Calendar, path: "/browse-groups" },
-    { text: "Dashboard and Insights", icon: Book, path: "/user-dashboard" },
-    { text: "Create a group", icon: Users, path: "/create-group" }
+    { text: "Join a group", icon: Users, path: "/browse-groups" },
+    { text: "Dashboard and Insights", icon: BarChart, path: "/user-dashboard" },
+    { text: "Create a group", icon: Plus, path: "/create-group" },
+    { text: "Login/Signup", icon: Lock, path: "/auth" },
   ];
 
   return (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
+import { Layout } from './Layout';
 import config from '../config';
 
 const Auth = () => {
@@ -84,6 +85,7 @@ const Auth = () => {
   
 
   return (
+    <Layout>
     <div className="auth-container">
       <div className="auth-form-container">
         <h2 className="auth-title">
@@ -144,6 +146,7 @@ const Auth = () => {
         </div>
       </div>
     </div>
+    </Layout>
   );
 };
 
