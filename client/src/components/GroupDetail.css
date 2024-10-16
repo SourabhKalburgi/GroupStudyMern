@@ -304,3 +304,85 @@
   margin-top: 10px;
   background-color: #efefef;
 }
+.ai-button {
+  background-color: #28a745 !important;  /* Green background */
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+
+.ai-button:hover {
+  background-color: #218838;  /* Darker green on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ai-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+  100% {
+    transform: translate(50%, 50%) rotate(45deg);
+  }
+}
+
+.ai-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.ai-button:disabled::before {
+  animation: none;
+}
+
+/* Animation for when AI is thinking */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.ai-button.loading {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.ai-response {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0f8ff;
+  border-radius: 5px;
+  border: 1px solid #4a90e2;
+}
+
+.ai-response h4 {
+  margin-top: 0;
+  color: #4a90e2;
+}
+.ai-error {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #ffe6e6;
+  border-radius: 5px;
+  border: 1px solid #ff4d4d;
+  color: #cc0000;
+}

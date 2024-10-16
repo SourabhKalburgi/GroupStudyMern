@@ -28,6 +28,9 @@ const GroupDetail = () => {
   const [forumPosts, setForumPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
   const [newAnswers, setNewAnswers] = useState({});
+  const [aiResponse, setAiResponse] = useState('');
+  const [aiError, setAiError] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const navigate = useNavigate();
   // New state variables for Jitsi
   const [showVideoSession, setShowVideoSession] = useState(false);
@@ -207,6 +210,40 @@ const GroupDetail = () => {
       setError('Failed to start video session. Please try again.');
     }
   };
+  const handleAskAI = async () => {
+    if (!newPost.trim()) {
+      // Don't ask AI if the question is empty
+      return;
+    }
+
+    setIsAiLoading(true);
+    setAiError('');
+    setAiResponse('');
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/api/ai/ask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ question: newPost }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to get AI response');
+      }
+
+      setAiResponse(data.answer);
+    } catch (error) {
+      console.error('Error asking AI:', error);
+      setAiError(error.message || 'Sorry, I couldn\'t generate a response at this time.');
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="group-detail-container">
@@ -325,8 +362,22 @@ const GroupDetail = () => {
                   maxLength={150 * 5}
                 ></textarea>
                 <button type="submit" className="button post-button">Post</button>
+                <button type="button" className="button ai-button" onClick={handleAskAI} disabled={isAiLoading}>
+                  {isAiLoading ? 'Asking AI...' : 'Ask AI'}
+                </button>
               </form>
-
+              {aiResponse && (
+                <div className="ai-response">
+                  <h4>AI Response:</h4>
+                  <p>{aiResponse}</p>
+                </div>
+              )}
+              {aiError && (
+                <div className="ai-error">
+                  <h4>Error:</h4>
+                  <p>{aiError}</p>
+                </div>
+              )}
               <div className="forum-posts" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 {forumPosts.slice(0, 3).map((post) => (
                   <div key={post._id} className="forum-post">
@@ -347,7 +398,7 @@ const GroupDetail = () => {
                       e.preventDefault();
                       handleAnswerSubmit(post._id);
                     }}>
-                      <div class="answer-container">
+                      <div className="answer-container">
                         <textarea
                           className="answer-textarea"
                           rows="3"

@@ -6,6 +6,7 @@ const groupRoutes = require('./routes/groups');
 const authRoutes = require('./routes/auth');
 const forumRoutes = require('./routes/forum');
 const videoSessionRoutes = require('./routes/videoSessions');
+const aiRoutes = require('./routes/ai');
 // Load environment variables from .env file
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes); // Make sure this is used
 app.use('/api/forum', forumRoutes);
 app.use('/api', videoSessionRoutes);
+app.use('/api/ai', aiRoutes);
 
 const PORT = process.env.PORT || 5000;
 
