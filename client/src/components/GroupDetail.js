@@ -301,10 +301,6 @@ const GroupDetail = () => {
                 <Camera size={20} className="button-icon" />
                 <span>Start Video Session</span>
               </button>
-              {/* <button className="button voice-button">
-                <Mic size={20} className="button-icon" />
-                <span>Join Voice Session</span>
-              </button> */}
             </div>
             {showVideoSession && (
               <div className="video-session-container">
@@ -337,18 +333,6 @@ const GroupDetail = () => {
                 />
               </div>
             )}
-
-            <div className="section upcoming-meetings-section">
-              <h2 className="section-title">Upcoming Discussions</h2>
-              <ul className="meetings-list">
-                {upcomingMeetings.map((meeting) => (
-                  <li key={meeting.id} className="meeting-item">
-                    <h3>{meeting.title}</h3>
-                    <p>{meeting.date} at {meeting.time}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
 
             <div className="section forum-section">
               <h2 className="section-title">Discussion Forum</h2>
@@ -414,7 +398,17 @@ const GroupDetail = () => {
                 ))}
               </div>
             </div>
-
+            <div className="section upcoming-meetings-section">
+              <h2 className="section-title">Upcoming Discussions</h2>
+              <ul className="meetings-list">
+                {upcomingMeetings.map((meeting) => (
+                  <li key={meeting.id} className="meeting-item">
+                    <h3>{meeting.title}</h3>
+                    <p>{meeting.date} at {meeting.time}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="section resources-section">
               <h2 className="section-title">Resources</h2>
               <ul className="resources-list">
