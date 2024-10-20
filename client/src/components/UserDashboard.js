@@ -18,7 +18,6 @@ const UserDashboard = () => {
     if (user) {
       fetchUserData();
     } else if (!loading) {
-      // If not loading and no user, show the auth modal
       setShowAuthModal(true);
     }
   }, [user, loading]);
@@ -48,7 +47,7 @@ const UserDashboard = () => {
   return (
     <Layout>
       <div className="dashboard-container">
-        <h1>User Dashboard</h1>
+        <h1 className="page-title">User Dashboard</h1>
 
         {user ? (
           <>
@@ -82,6 +81,11 @@ const UserDashboard = () => {
               ) : (
                 <p>You haven't joined any groups yet.</p>
               )}
+              <div className="button-section">
+              <button className="profile-button" onClick={() => navigate('/profile')}>
+                Go to Profile
+              </button>
+            </div>
             </div>
           </>
         ) : (

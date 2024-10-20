@@ -247,9 +247,6 @@ const GroupDetail = () => {
   return (
     <Layout>
       <div className="group-detail-container">
-        <button className="back-button" onClick={() => navigate('/browse-groups')}>
-          <ArrowLeft size={20} /> Browse Groups
-        </button>
         <h1 className="browse-groups-title">Group information</h1>
         {showJoinAlert && (
           <Alert onClose={() => setShowJoinAlert(false)}>
@@ -293,7 +290,9 @@ const GroupDetail = () => {
             </button>
           )}
         </div>
-
+        <button className="back-button" onClick={() => navigate('/browse-groups')}>
+          <ArrowLeft size={20} /> Browse Groups
+        </button>
         {joined && (
           <>
             <div className="session-buttons">
@@ -364,35 +363,44 @@ const GroupDetail = () => {
               )}
               <div className="forum-posts" style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 {forumPosts.slice(0, 3).map((post) => (
-                  <div key={post._id} className="forum-post">
+                  <div className="forum-post">
                     <div className="post-header">
-                      <div className="user-icon">{post.author.username[0].toUpperCase()}</div>
-                      <h3>{post.author.username}</h3>
-                    </div>
-                    <p>{post.content}</p>
-                    <h4>Answers:</h4>
-                    {post.answers.map(answer => (
-                      <div key={answer._id}>
-                        {answer.author?.username ? answer.author.username : 'Unknown User'}: {answer.content}
+                      <div className="user-icon">
+                        {post.author?.username ? post.author.username[0].toUpperCase() : '?'}
                       </div>
-                    ))}
+                      <h3>{post.author?.username || 'Anonymous'}</h3>
+                    </div>
+                    <p className="post-content">{post.content}</p>
 
+                    <div className="answers-section">
+                      <h4 className="answers-title">Answers:</h4>
+                      {post.answers && post.answers.length > 0 ? (
+                        post.answers.map(answer => (
+                          <div key={answer._id} className="answer-item">
+                            <div className="answer-author">
+                              {answer.author?.username || 'Anonymous'}
+                            </div>
+                            <div className="answer-content">{answer.content}</div>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No answers yet.</p>
+                      )}
+                    </div>
 
                     <form onSubmit={(e) => {
                       e.preventDefault();
                       handleAnswerSubmit(post._id);
-                    }}>
-                      <div className="answer-container">
-                        <textarea
-                          className="answer-textarea"
-                          rows="3"
-                          placeholder="Add an answer (max 400 words)..."
-                          value={newAnswers[post._id] || ''}
-                          onChange={(e) => setNewAnswers(prev => ({ ...prev, [post._id]: e.target.value }))}
-                          maxLength={400 * 5}
-                        ></textarea>
-                        <button type="submit" className="button answer-button">Answer</button>
-                      </div>
+                    }} className="answer-form">
+                      <textarea
+                        className="answer-textarea"
+                        rows="3"
+                        placeholder="Add an answer (max 400 words)..."
+                        value={newAnswers[post._id] || ''}
+                        onChange={(e) => setNewAnswers(prev => ({ ...prev, [post._id]: e.target.value }))}
+                        maxLength={400 * 5}
+                      ></textarea>
+                      <button type="submit" className="answer-button">Answer</button>
                     </form>
                   </div>
                 ))}

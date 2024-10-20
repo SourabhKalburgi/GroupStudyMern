@@ -7,8 +7,8 @@
   const features = [
     { text: "Live Video Chat", color: "#513B56", icon: Video },
     { text: "Smart Scheduling", color: "#525174", icon: Calendar },
-    { text: "Interactive Whiteboard", color: "#348AA7", icon: Book },
-    // { text: "AI Tutor Assist", color: "#4E598C", icon: Lightbulb },
+    // { text: "Interactive Whiteboard", color: "#348AA7", icon: Book },
+    { text: "AI Tutor Assist", color: "#4E598C", icon: Lightbulb },
     { text: "Find Study Buddies", color: "#341C1C", icon: Users }
   ];
 
@@ -68,7 +68,7 @@
           </motion.h1>
           <motion.p 
             className="description"
-            initial={{ y: 50, opacity: 0 }}
+            initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
@@ -78,9 +78,9 @@
             <motion.div 
               key={currentFeature}
               className="feature-highlight"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+              exit={{ opacity: 0, y: -5 }}
               transition={{ duration: 0.5 }}
             >
               {React.createElement(features[currentFeature].icon, { size: 40, className: 'feature-icon' })}

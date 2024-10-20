@@ -305,7 +305,7 @@
   background-color: #efefef;
 }
 .ai-button {
-  background-color: #28a745 !important;  /* Green background */
+  background-color: #ff5aeb !important;  /* Green background */
   color: white;
   position: relative;
   overflow: hidden;
@@ -314,7 +314,7 @@
 }
 
 .ai-button:hover {
-  background-color: #218838;  /* Darker green on hover */
+  background-color: #ff5aeb;  /* Darker green on hover */
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -385,4 +385,109 @@
   border-radius: 5px;
   border: 1px solid #ff4d4d;
   color: #cc0000;
+}
+.user-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+/* ... (previous styles remain unchanged) ... */
+
+/* Forum Post Styles */
+.forum-post {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.post-content {
+  margin-bottom: 16px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Answer Section Styles */
+.answers-section {
+  margin-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+}
+
+.answers-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.answer-item {
+  background-color: #f8f9fa;
+  border-left: 3px solid #007bff;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 0 4px 4px 0;
+}
+
+.answer-author {
+  font-weight: 600;
+  color: #007bff;
+  margin-bottom: 6px;
+}
+
+.answer-content {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Answer Form Styles */
+.answer-form {
+  margin-top: 16px;
+}
+
+.answer-textarea {
+  width: 90%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 80px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.answer-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.answer-button:hover {
+  background-color: #218838;
 }

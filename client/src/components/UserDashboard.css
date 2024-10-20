@@ -33,3 +33,21 @@
   p {
     color: #777;
   }
+ 
+  .profile-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    color: white;
+    background-color: #4CAF50;
+    /* Green background */
+  }
+  
+  .profile-button:hover {
+    background-color: #45a049;
+    /* Darker green on hover */
+  }

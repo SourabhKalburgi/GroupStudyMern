@@ -13,7 +13,7 @@ const Sidebar = () => {
     { text: "Join a group", icon: Users, path: "/browse-groups" },
     { text: "Dashboard and Insights", icon: BarChart, path: "/user-dashboard" },
     { text: "Create a group", icon: Plus, path: "/create-group" },
-    { text: "Login/Signup", icon: Lock, path: "/auth" },
+    { text: "Login/Signup", icon: Lock, path: "/profile" },
   ];
 
   return (

@@ -1,67 +1,92 @@
 .profile-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .profile-details {
-    background-color: #f5f5f5;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  
-  .profile-details p {
-    font-size: 18px;
-    margin: 5px 0;
-  }
-  
-  .profile-tabs {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .tab {
-    flex: 1;
-    margin-right: 15px;
-  }
-  
-  .tab:last-child {
-    margin-right: 0;
-  }
-  
-  h3 {
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
-  }
-  
-  ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  li {
-    background-color: #f0f0f0;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  .logout-section {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .logout-button {
-    padding: 10px 20px;
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .logout-button:hover {
-    background-color: #ff3333;
-  }
-  
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-details {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.profile-details p {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+.profile-tabs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab {
+  flex: 1;
+  margin-right: 15px;
+}
+
+.tab:last-child {
+  margin-right: 0;
+}
+
+h3 {
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 5px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  background-color: #f0f0f0;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.logout-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.logout-button {
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.logout-button:hover {
+  background-color: #ff3333;
+}
+
+.dashboard-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  color: white;
+  background-color: #4CAF50;
+  /* Green background */
+}
+
+.dashboard-button:hover {
+  background-color: #45a049;
+  /* Darker green on hover */
+}
+.page-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #4f46e5;
+}
