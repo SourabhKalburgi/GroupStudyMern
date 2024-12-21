@@ -38,7 +38,9 @@ app.use('/api/groups', groupRoutes); // Make sure this is used
 app.use('/api/forum', forumRoutes);
 app.use('/api', videoSessionRoutes);
 app.use('/api/ai', aiRoutes);
-
+app.get('/health', (req, res) => {
+  res.status(200).send('Server is active');
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

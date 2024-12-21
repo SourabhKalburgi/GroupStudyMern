@@ -7,6 +7,7 @@ import GroupDetail from './components/GroupDetail';
 import CreateGroup from './components/CreateGroup';
 import Profile from './components/Profile';
 import UserDashboard from './components/UserDashboard';
+import HealthCheck from './components/HealthCheck';
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           <Route path="/create-group" element={<CreateGroup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/user-dashboard" element={<UserDashboard />} />
+          <Route path="/health" element={<HealthCheck />} />
+
         </Routes>
       </Router>
     </AuthProvider>
