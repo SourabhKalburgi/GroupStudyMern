@@ -1,0 +1,193 @@
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px; /* Minimum height to ensure visibility */
+    background-color: rgba(255, 255, 255, 0.9); /* Optional: adds a slight overlay */
+    z-index: 1000; /* Ensures loader appears above other content */
+  }
+  
+  .boxes {
+    --size: 32px;
+    --duration: 800ms;
+    height: calc(var(--size) * 2);
+    width: calc(var(--size) * 3);
+    position: relative;
+    transform-style: preserve-3d;
+    transform-origin: 50% 50%;
+    transform: rotateX(60deg) rotateZ(45deg) rotateY(0deg) translateZ(0px);
+    margin: 0; /* Remove negative margin */
+  }
+  
+  /* Rest of the CSS remains the same */
+  .boxes .box {
+    width: var(--size);
+    height: var(--size);
+    top: 0;
+    left: 0;
+    position: absolute;
+    transform-style: preserve-3d;
+  }
+  
+  .boxes .box:nth-child(1) {
+    transform: translate(100%, 0);
+    animation: box1 var(--duration) linear infinite;
+  }
+  
+  .boxes .box:nth-child(2) {
+    transform: translate(0, 100%);
+    animation: box2 var(--duration) linear infinite;
+  }
+  
+  .boxes .box:nth-child(3) {
+    transform: translate(100%, 100%);
+    animation: box3 var(--duration) linear infinite;
+  }
+  
+  .boxes .box:nth-child(4) {
+    transform: translate(200%, 0);
+    animation: box4 var(--duration) linear infinite;
+  }
+  
+  .boxes .box > div {
+    --background: #5C8DF6;
+    --top: auto;
+    --right: auto;
+    --bottom: auto;
+    --left: auto;
+    --translateZ: calc(var(--size) / 2);
+    --rotateY: 0deg;
+    --rotateX: 0deg;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--background);
+    top: var(--top);
+    right: var(--right);
+    bottom: var(--bottom);
+    left: var(--left);
+    transform: rotateY(var(--rotateY)) rotateX(var(--rotateX)) translateZ(var(--translateZ));
+  }
+  
+  .boxes .box > div:nth-child(1) {
+    --top: 0;
+    --left: 0;
+  }
+  
+  .boxes .box > div:nth-child(2) {
+    --background: #145af2;
+    --right: 0;
+    --rotateY: 90deg;
+  }
+  
+  .boxes .box > div:nth-child(3) {
+    --background: #447cf5;
+    --rotateX: -90deg;
+  }
+  
+  .boxes .box > div:nth-child(4) {
+    --background: #DBE3F4;
+    --top: 0;
+    --left: 0;
+    --translateZ: calc(var(--size) * 3 * -1);
+  }
+  
+  @keyframes box1 {
+    0%, 50% {
+      transform: translate(100%, 0);
+    }
+    100% {
+      transform: translate(200%, 0);
+    }
+  }
+  
+  @keyframes box2 {
+    0% {
+      transform: translate(0, 100%);
+    }
+    50% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(100%, 0);
+    }
+  }
+  
+  @keyframes box3 {
+    0%, 50% {
+      transform: translate(100%, 100%);
+    }
+    100% {
+      transform: translate(0, 100%);
+    }
+  }
+  
+  @keyframes box4 {
+    0% {
+      transform: translate(200%, 0);
+    }
+    50% {
+      transform: translate(200%, 100%);
+    }
+    100% {
+      transform: translate(100%, 100%);
+    }
+  }
+  .section-loader-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .boxes {
+    --size: 32px;
+    --duration: 800ms;
+    height: calc(var(--size) * 2);
+    width: calc(var(--size) * 3);
+    position: relative;
+    transform-style: preserve-3d;
+    transform-origin: 50% 50%;
+    transform: rotateX(60deg) rotateZ(45deg) rotateY(0deg) translateZ(0px);
+    margin: 0;
+  }
+  
+  /* Rest of the boxes styles remain the same */
+  .boxes .box {
+    width: var(--size);
+    height: var(--size);
+    top: 0;
+    left: 0;
+    position: absolute;
+    transform-style: preserve-3d;
+  }
+  
+  .boxes .box:nth-child(1) {
+    transform: translate(100%, 0);
+    animation: box1 var(--duration) linear infinite;
+  }
+  
+  .boxes .box:nth-child(2) {
+    transform: translate(0, 100%);
+    animation: box2 var(--duration) linear infinite;
+  }
+  
+  .boxes .box:nth-child(3) {
+    transform: translate(100%, 100%);
+    animation: box3 var(--duration) linear infinite;
+  }
+  
+  .boxes .box:nth-child(4) {
+    transform: translate(200%, 0);
+    animation: box4 var(--duration) linear infinite;
+  }
+  
+  /* Rest of the animations and box styles remain the same */
