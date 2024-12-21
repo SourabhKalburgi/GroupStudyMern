@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Layout } from './Layout';
 import './BrowseGroups.css';
 import config from '../config';
+import Loader from './Loader';
 
 const BrowseGroups = ({ limit, showFilters = true }) => {
   const [groups, setGroups] = useState([]);
@@ -56,7 +57,7 @@ const BrowseGroups = ({ limit, showFilters = true }) => {
       return 0;
     });
 
-  if (loading) return <div className="loading">Loading groups...</div>;
+  if (loading) return <div className="explore-groups-loading"><Loader /><p style={{ marginTop: '1rem', color: '#666' }}>Loading all Groups...</p></div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart, Users as UsersIcon, Star } from 'lucide-react';
 import './ExploreGroups.css';
 import config from '../config';
+import Loader from './Loader'; 
 
 const ExploreGroups = ({ limit = 3 }) => {
   const [groups, setGroups] = useState([]);
@@ -29,7 +30,7 @@ const ExploreGroups = ({ limit = 3 }) => {
     fetchGroups();
   }, [limit]);
 
-  if (loading) return <div className="explore-groups-loading">Loading popular groups...</div>;
+  if (loading) return <div className="explore-groups-loading"><Loader /><p style={{ marginTop: '1rem', color: '#666' }}>Loading popular Groups...</p></div>;
   if (error) return <div className="explore-groups-error">{error}</div>;
 
   return (
