@@ -229,3 +229,17 @@
     height: 300px;
   }
 }
+@media (max-width: 500px) {
+  .feature-showcase{
+    width: 59%;
+    margin:  auto;
+  }
+  .feature-content{
+    font-size: 15px;
+  }
+  .action-buttons{
+    width: 80%;
+    margin: 20px  auto;
+
+  }
+}
