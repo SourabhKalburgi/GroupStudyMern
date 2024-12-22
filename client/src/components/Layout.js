@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Home, Users, Plus, BarChart, Lock} from 'lucide-react';
+import { Menu, X, Home, Users, Plus, BarChart, Lock } from 'lucide-react';
 import './Layout.css';
 import { useAuth } from '../context/AuthContext';
 
-const Sidebar = () => {
+export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { isLoggedIn, user } = useAuth();
+  const navigate = useNavigate();
 
-  const features = [
+  const navItems = [
     { text: "Home", icon: Home, path: "/" },
     { text: "Join a group", icon: Users, path: "/browse-groups" },
     { text: "Dashboard and Insights", icon: BarChart, path: "/user-dashboard" },
@@ -17,63 +19,50 @@ const Sidebar = () => {
   ];
 
   return (
-    <>
-      <button className="sidebar-toggle" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-        {features.map((feature, index) => (
-          <Link
-            key={index}
-            to={feature.path}
-            className={`sidebar-item ${location.pathname === feature.path ? 'active' : ''}`}
-            onClick={() => setIsOpen(false)}
-          >
-            <feature.icon size={20} />
-            <span>{feature.text}</span>
-          </Link>
-        ))}
-      </div>
-    </>
-  );
-};
-
-
-const UserCircle = () => {
-  const navigate = useNavigate();
-  const { isLoggedIn, user, loading } = useAuth();
-
-  const handleClick = () => {
-    if (isLoggedIn) {
-      navigate('/profile');
-    } else {
-      navigate('/auth');
-    }
-  };
-
-  if (loading) {
-    return <div className="user-circle">Loading...</div>;
-  }
-
-  return (
-    <div className="user-circle" onClick={handleClick}>
-      {isLoggedIn && user?.profileImage ? (
-        <img src={user.profileImage} alt="User" className="user-image" />
-      ) : (
-        <div className="default-user-icon">
-          {isLoggedIn ? user?.username?.charAt(0).toUpperCase() : '?'}
+    <nav className="navbar">
+      <div className="nav-content">
+        <div className="nav-left">
+          <h1 className="nav-brand" onClick={() => navigate('/')} style={{cursor: 'pointer'}}>StudyHive</h1>
+          <div className={`nav-links ${isOpen ? 'active' : ''}`}>
+            {navItems.map((item, index) => (
+              <Link
+                key={index}
+                to={item.path}
+                className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={() => setIsOpen(false)}
+              >
+                <item.icon />
+                <span>{item.text}</span>
+              </Link>
+            ))}
+          </div>
         </div>
-      )}
-    </div>
+
+        <div className="nav-right">
+          <div className="user-profile" onClick={() => navigate('/profile')}>
+            {isLoggedIn && user?.profileImage ? (
+              <img src={user.profileImage} alt="User" />
+            ) : (
+              <div className="user-initial">
+                {isLoggedIn ? user?.username?.charAt(0).toUpperCase() : '?'}
+              </div>
+            )}
+          </div>
+          <button className="mobile-toggle" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+      </div>
+    </nav>
   );
 };
 
-const Footer = () => {
+export const Footer = () => {
   return (
-    <footer className="app-footer">
+    <footer className="footer">
       <div className="footer-content">
-        <p>&copy; 2024 Group Study App. All rights reserved.</p>
-        <nav>
+        <p>&copy; 2024 StudyHive. All rights reserved.</p>
+        <nav className="footer-links">
           <Link to="/about">About</Link>
           <Link to="/contact">Contact</Link>
           <Link to="/privacy">Privacy Policy</Link>
@@ -84,17 +73,16 @@ const Footer = () => {
   );
 };
 
-const Layout = ({ children }) => {
+export const Layout = ({ children }) => {
   return (
-    <div className="app-layout">
-      <Sidebar />
-      <div className="main-content">
-        <UserCircle />
+    <div className="layout">
+      <Navbar />
+      <main className="main-content">
         {children}
-      </div>
+      </main>
       <Footer />
     </div>
   );
 };
 
-export { Layout, Sidebar, UserCircle, Footer };
+export default Layout;
