@@ -174,7 +174,7 @@
   }
 
   .nav-item {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.5rem;
   }
 }
 
@@ -206,7 +206,7 @@
     display: none;
     flex-direction: column;
     width: 140px;
-    padding: 2px 8px;
+    padding: 2px 0px;
   }
 
   .nav-links.active {
@@ -214,8 +214,8 @@
   }
 
   .nav-item {
-    width: 100%;
-    font-size: 12px;
+    width: 50%;
+    font-size: 9px;
   }
 
   .footer-content {
