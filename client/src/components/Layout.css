@@ -1,160 +1,238 @@
-/* Layout.css */
-.app-layout {
+.layout {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
-.main-content {
-  flex-grow: 1;
-  /* Remove transition from here */
-}
-
-/* Sidebar styles */
-.sidebar {
-  width: 250px;
-  background-color: #f0f0f0;
-  height: 100vh;
-  position: fixed;
-  left: -250px;
+.navbar {
+  background: #000000d1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 0;
+  position: sticky;
   top: 0;
-  transition: left 0.3s ease-in-out;
-  z-index: 1000;
-  overflow-y: auto;
-  padding-top: 60px; 
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.4s ease-in-out;
-}
-
-.sidebar.open {
-  left: 0;
-}
-
-.sidebar-toggle {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 1001;
-  background: #f0f0f02e;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  background-color: rgba(255, 255, 255, 0.1);
-  margin-bottom: 10px;
-  margin-right: 20px;
-  border-radius: 10px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.sidebar-item.active {
-  background-color: rgb(1 0 119 / 20%);
-  transform: translateX(10px);
-
-}
-.sidebar-item:hover{
-  background-color: rgba(2, 0, 119, 0.073);
-  transform: translateX(10px);
-
-}
-
-.sidebar-item svg {
-  margin-right: 10px;
-}
-
-/* UserCircle styles */
-.user-circle {
-  position: fixed;
-  top: 10px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  overflow: hidden;
-  z-index: 1000;
-}
-
-.user-image {
+  z-index: 100;
   width: 100%;
-  height: 100%;
+}
+
+.nav-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.nav-brand {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+  min-width: max-content;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 5px; /* Space for potential scrollbar */
+  scrollbar-width: thin;
+}
+
+.nav-links::-webkit-scrollbar {
+  height: 3px;
+}
+
+.nav-links::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: max-content;
+}
+
+.nav-item:hover {
+  background: #f3f4f6;
+  color: #4338ca;
+}
+
+.nav-item.active {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.nav-item svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.user-profile {
+  cursor: pointer;
+}
+
+.user-profile img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
   object-fit: cover;
 }
 
-.default-user-icon {
-  font-size: 24px;
-  color: #333;
+.user-initial {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #4338ca;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 
-/* Footer styles */
-.app-footer {
-  background-color: #333;
-  color: #e0e0e0;
-  text-align: center;
-  width: 100%;
-  padding: 20px 0;
+.main-content {
+  flex: 1;
+  background: #f9fafb;
+}
+
+.footer {
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  padding: 2rem 1rem;
+  margin-top: auto;
 }
 
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  color: #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.footer-content nav {
-  margin-top: 10px;
+.footer-links {
+  display: flex;
+  gap: 2rem;
 }
 
-.footer-content nav a {
-  margin: 0 10px;
-  color: #ffffff;
+.footer-links a {
+  color: #374151;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.footer-content nav a:hover {
-  text-decoration: underline;
+.footer-links a:hover {
+  color: #4338ca;
 }
 
-/* Ensure content doesn't overlap with sidebar when it's open */
-@media (min-width: 768px) {
-  .main-content {
-    margin-left: 0;
-    transition: margin-left 0.3s ease-in-out;
+@media (max-width: 1024px) {
+  .nav-content {
+    padding: 0 1rem;
   }
 
-  .sidebar.open + .main-content {
-    margin-left: 250px;
+  .nav-left {
+    gap: 1rem;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+  }
+
+  .nav-item {
+    padding: 0.5rem 0.75rem;
   }
 }
 
-/* For smaller screens, overlay the sidebar */
-@media (max-width: 767px) {
-  .sidebar {
+@media (max-width: 840px) {
+  .nav-content {
+    height: auto;
+    padding: 0rem 0;
+  }
+  .navbar {
+    background: #000000d1;
+  }
+  .nav-brand {
+    color: #ffffff;
+    font-size: 1rem;
+  }
+
+  .nav-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-left: 10px;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 140px;
+    padding: 2px 8px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-item {
     width: 100%;
-    max-width: 250px;
+    font-size: 12px;
   }
 
-  .sidebar.open {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
 
-  .main-content {
-    margin-left: 0 !important;
+  .footer-links {
+    flex-direction: column;
+    gap: 1rem;
   }
 }
-.sidebar-item {
-  text-decoration: none;
+@media (min-width: 768px) and (max-width: 1070px) {
+
+  .nav-links {
+    font-size: 10px;
+  }
+
 }
