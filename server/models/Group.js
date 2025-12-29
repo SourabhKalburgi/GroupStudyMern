@@ -13,6 +13,11 @@ const groupSchema = new mongoose.Schema({
     rating: { type: Number, min: 1, max: 5 }
   }],
   averageRating: { type: Number, default: 0 },
+  activeVideoSession: {
+    roomName: { type: String },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date }
+  }
 }, { timestamps: true });
 
 groupSchema.methods.calculateAverageRating = function() {
