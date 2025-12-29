@@ -491,3 +491,201 @@
 .answer-button:hover {
   background-color: #218838;
 }
+
+/* Video Session Styles */
+.video-session-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.video-session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.video-session-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.video-session-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.close-video-button, .invite-in-session-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.close-video-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.close-video-button:hover {
+  background-color: #c82333;
+}
+
+.invite-in-session-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.invite-in-session-button:hover {
+  background-color: #0056b3;
+}
+
+.invite-button {
+  background-color: #17a2b8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.invite-button:hover {
+  background-color: #138496;
+}
+
+.jitsi-container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000;
+  position: relative;
+}
+
+/* Ensure Jitsi video elements are visible */
+.jitsi-container iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+}
+
+/* Ensure video tracks are visible */
+.jitsi-container video {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain;
+}
+
+/* Invite Modal Styles */
+.invite-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.invite-modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.invite-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.invite-modal-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.close-modal-btn:hover {
+  color: #333;
+}
+
+.invite-modal-content {
+  padding: 24px;
+}
+
+.invite-modal-content p {
+  margin: 0 0 16px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.invite-link-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.invite-link-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.copy-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.copy-button:hover {
+  background-color: #0056b3;
+}
+
+.invite-note {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+  margin-top: 8px !important;
+}

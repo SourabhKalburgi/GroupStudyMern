@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { UsersIcon, Star, Camera, Mic, ArrowLeft, X } from 'lucide-react';
+import { UsersIcon, Star, Camera, Mic, ArrowLeft, X, Share2, Copy } from 'lucide-react';
 import { Layout } from './Layout';
 import './GroupDetail.css';
 import config from '../config';
@@ -32,23 +32,310 @@ const GroupDetail = () => {
   const [aiError, setAiError] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const navigate = useNavigate();
-  // New state variables for Jitsi
+  // Video session state variables
   const [showVideoSession, setShowVideoSession] = useState(false);
   const [roomName, setRoomName] = useState('');
-  const [jitsiApi, setJitsiApi] = useState(null);
+  const [hasActiveSession, setHasActiveSession] = useState(false);
+  const [sessionLoading, setSessionLoading] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteLink, setInviteLink] = useState('');
+  const jitsiApiRef = useRef(null);
+  
   const handleJitsiError = useCallback((error) => {
     console.error('Jitsi Error:', error);
     setError('Failed to join video session. Please check your permissions and try again.');
     setShowVideoSession(false);
   }, []);
 
+  const handleEndSession = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (jitsiApiRef.current) {
+        jitsiApiRef.current.dispose();
+        jitsiApiRef.current = null;
+      }
+      
+      if (id && token) {
+        await fetch(`${config.apiBaseUrl}/api/groups/${id}/video-session`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+      }
+
+      setShowVideoSession(false);
+      setRoomName('');
+      setHasActiveSession(false);
+      setShowInviteModal(false);
+    } catch (error) {
+      console.error('Error ending session:', error);
+      setShowVideoSession(false);
+      setRoomName('');
+      setHasActiveSession(false);
+    }
+  }, [id]);
+
   const handleJitsiReady = useCallback((api) => {
-    setJitsiApi(api);
-    api.executeCommand('displayName', localStorage.getItem('username'));
-    api.on('videoConferenceJoined', () => {
-      console.log('Local user joined');
+    jitsiApiRef.current = api;
+    const displayName = localStorage.getItem('username') || 'User';
+    api.executeCommand('displayName', displayName);
+    
+    // Function to ensure video is enabled using correct API methods
+    const ensureVideoEnabled = () => {
+      try {
+        // Check if video is muted using the correct API method
+        api.isVideoMuted().then(isMuted => {
+          console.log('Video muted status:', isMuted);
+          if (isMuted) {
+            console.log('Video is muted, enabling...');
+            api.executeCommand('toggleVideo');
+          } else {
+            console.log('Video is already enabled');
+          }
+        }).catch(err => {
+          console.log('Error checking video mute status:', err);
+          // If check fails, try to enable video anyway
+          api.executeCommand('toggleVideo');
+        });
+      } catch (e) {
+        console.log('Error in ensureVideoEnabled:', e);
+        // Fallback: try to toggle video
+        try {
+          api.executeCommand('toggleVideo');
+        } catch (toggleErr) {
+          console.log('Error toggling video:', toggleErr);
+        }
+      }
+    };
+
+    // Handle prejoin page events
+    api.on('prejoinVideoMuted', (isMuted) => {
+      console.log('Prejoin video muted status:', isMuted);
+      if (isMuted) {
+        // Unmute video on prejoin page
+        setTimeout(() => {
+          api.executeCommand('toggleVideo');
+        }, 300);
+      }
     });
-  }, []);
+
+    // When prejoin page is ready, ensure video is visible
+    api.on('prejoinPageReady', () => {
+      console.log('Prejoin page ready');
+      setTimeout(() => {
+        api.isVideoMuted().then(muted => {
+          if (muted) {
+            console.log('Video is muted on prejoin, unmuting...');
+            api.executeCommand('toggleVideo');
+          }
+        });
+      }, 500);
+    });
+
+    api.on('videoConferenceJoined', () => {
+      console.log('Local user joined the conference');
+      
+      // Get local participant ID to pin/show local video
+      const localParticipant = api.getLocalParticipant();
+      console.log('Local participant:', localParticipant);
+      
+      // Ensure video is enabled after joining - try multiple times with delays
+      setTimeout(() => {
+        ensureVideoEnabled();
+        // Try to pin local video to ensure it's visible
+        if (localParticipant && localParticipant.id) {
+          try {
+            api.executeCommand('pinParticipant', localParticipant.id);
+          } catch (err) {
+            console.log('Error pinning participant:', err);
+          }
+        }
+      }, 500);
+      
+      setTimeout(() => {
+        ensureVideoEnabled();
+      }, 1500);
+      
+      setTimeout(() => {
+        ensureVideoEnabled();
+        // Try to set local video as large video
+        if (localParticipant && localParticipant.id) {
+          try {
+            api.executeCommand('setLargeVideoParticipant', localParticipant.id);
+          } catch (err) {
+            console.log('Error setting large video participant:', err);
+          }
+        }
+      }, 3000);
+      
+      // Try multiple approaches to ensure video is visible
+      setTimeout(() => {
+        // Method 1: Check if video is muted and unmute if needed
+        api.isVideoMuted().then(muted => {
+          console.log('Video muted after join:', muted);
+          if (muted) {
+            api.executeCommand('toggleVideo');
+          }
+        });
+        
+        // Method 2: Try to set video device explicitly
+        try {
+          api.getVideoInputDevices().then(devices => {
+            console.log('Available video devices:', devices);
+            if (devices && devices.length > 0) {
+              // Use the first available camera
+              api.setVideoInputDevice(devices[0].deviceId).catch(err => {
+                console.log('Error setting video device:', err);
+              });
+            }
+          }).catch(err => {
+            console.log('Error getting video devices:', err);
+          });
+        } catch (err) {
+          console.log('Error in video device setup:', err);
+        }
+      }, 2000);
+    });
+
+    api.on('participantJoined', (participant) => {
+      console.log('Participant joined:', participant);
+    });
+
+    api.on('videoConferenceLeft', () => {
+      console.log('User left the conference');
+      handleEndSession();
+    });
+
+    api.on('readyToClose', () => {
+      console.log('Ready to close');
+      handleEndSession();
+    });
+
+    // Handle video mute/unmute events - the event format is different
+    api.on('videoMuteStatusChanged', (data) => {
+      console.log('Video mute status changed:', data);
+      // The data object contains muted status and participant info
+      // Handle both object format {muted: true} and direct boolean format
+      const isMuted = typeof data === 'object' ? data.muted : data;
+      const participantId = typeof data === 'object' ? data.participantId : undefined;
+      
+      // Only react if it's the local user's video that got muted
+      // If participantId is undefined, it's likely the local user
+      if (isMuted && !participantId) {
+        // Wait a bit longer before unmuting to ensure the track is ready
+        setTimeout(() => {
+          api.isVideoMuted().then(muted => {
+            if (muted) {
+              console.log('Unmuting local video...');
+              api.executeCommand('toggleVideo');
+            }
+          }).catch(() => {
+            console.log('Trying to unmute video...');
+            api.executeCommand('toggleVideo');
+          });
+        }, 1000);
+      }
+    });
+
+    // Handle local video track added - ensure it's visible
+    api.on('localVideoTrackAdded', (track) => {
+      console.log('Local video track added:', track);
+      if (track && track.track) {
+        const videoElement = track.track;
+        console.log('Video element:', videoElement);
+        
+        // Ensure video element is playing
+        if (videoElement && videoElement.play) {
+          videoElement.play().catch(err => {
+            console.log('Error playing video:', err);
+          });
+        }
+        
+        // Ensure video is not muted
+        setTimeout(() => {
+          api.isVideoMuted().then(muted => {
+            console.log('Local video muted status:', muted);
+            if (muted) {
+              console.log('Unmuting local video track...');
+              api.executeCommand('toggleVideo');
+            }
+          }).catch(() => {
+            api.executeCommand('toggleVideo');
+          });
+        }, 500);
+      }
+    });
+
+    // Handle participant video track added - ensure it's visible
+    api.on('participantVideoTrackAdded', (track) => {
+      console.log('Participant video track added:', track);
+      // If it's the local participant's track, ensure video is enabled
+      if (track && track.isLocal && track.isLocal()) {
+        setTimeout(() => {
+          api.isVideoMuted().then(muted => {
+            if (muted) {
+              api.executeCommand('toggleVideo');
+            }
+          });
+        }, 500);
+      }
+    });
+
+    // Handle track ready events
+    api.on('trackReady', (track) => {
+      console.log('Track ready:', track);
+      if (track && track.isLocal && track.isLocal()) {
+        setTimeout(() => {
+          api.isVideoMuted().then(muted => {
+            if (muted) {
+              api.executeCommand('toggleVideo');
+            }
+          });
+        }, 500);
+      }
+    });
+  }, [handleEndSession]);
+
+  // Check for active session on component load
+  useEffect(() => {
+    if (joined && id) {
+      checkActiveSession();
+    }
+  }, [joined, id]);
+
+  const checkActiveSession = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await fetch(`${config.apiBaseUrl}/api/groups/${id}/video-session`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.exists && data.roomName) {
+          setHasActiveSession(true);
+          setRoomName(data.roomName);
+          // Set invite link
+          const currentUrl = window.location.origin;
+          const inviteUrl = `${currentUrl}/group/${id}`;
+          setInviteLink(inviteUrl);
+        } else {
+          setHasActiveSession(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking active session:', error);
+    }
+  };
+
   useEffect(() => {
     fetch(`${config.apiBaseUrl}/api/groups/${id}`)
       .then((response) => {
@@ -187,8 +474,9 @@ const GroupDetail = () => {
     }
   };
 
-  const startVideoSession = async () => {
+  const startOrJoinVideoSession = async () => {
     try {
+      setSessionLoading(true);
       const token = localStorage.getItem('token');
       const response = await fetch(`${config.apiBaseUrl}/api/groups/${id}/video-session`, {
         method: 'POST',
@@ -199,16 +487,39 @@ const GroupDetail = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to start video session');
+        throw new Error('Failed to start/join video session');
       }
 
       const data = await response.json();
       setRoomName(data.roomName);
+      setHasActiveSession(true);
       setShowVideoSession(true);
+      
+      // Generate invite link
+      const currentUrl = window.location.origin;
+      const inviteUrl = `${currentUrl}/group/${id}`;
+      setInviteLink(inviteUrl);
     } catch (error) {
-      console.error('Error starting video session:', error);
-      setError('Failed to start video session. Please try again.');
+      console.error('Error starting/joining video session:', error);
+      setError('Failed to start/join video session. Please try again.');
+    } finally {
+      setSessionLoading(false);
     }
+  };
+
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(inviteLink).then(() => {
+      alert('Invite link copied to clipboard!');
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = inviteLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Invite link copied to clipboard!');
+    });
   };
   const handleAskAI = async () => {
     if (!newPost.trim()) {
@@ -296,40 +607,144 @@ const GroupDetail = () => {
         {joined && (
           <>
             <div className="session-buttons">
-              <button className="button video-button" onClick={startVideoSession}>
+              <button 
+                className="button video-button" 
+                onClick={startOrJoinVideoSession}
+                disabled={sessionLoading}
+              >
                 <Camera size={20} className="button-icon" />
-                <span>Start Video Session</span>
+                <span>{hasActiveSession ? 'Join Video Session' : 'Start Video Session'}</span>
               </button>
-            </div>
-            {showVideoSession && (
-              <div className="video-session-container">
-                <button className="close-video-button" onClick={() => {
-                  setShowVideoSession(false);
-                  localStorage.removeItem(`groupRoom_${id}`); // Clear cached room when closing
-                }}>
-                  Close Video Session
+              {hasActiveSession && (
+                <button 
+                  className="button invite-button" 
+                  onClick={() => setShowInviteModal(true)}
+                >
+                  <Share2 size={20} className="button-icon" />
+                  <span>Invite Others</span>
                 </button>
-                <Jitsi
-                  roomName={roomName}
-                  displayName={localStorage.getItem('username')}
-                  onAPILoad={handleJitsiReady}
-                  onError={handleJitsiError}
-                  containerStyle={{ width: '100%', height: '600px' }}
-                  config={{
-                    startWithAudioMuted: false,
-                    startWithVideoMuted: false,
-                    prejoinPageEnabled: false,
-                    disableDeepLinking: true,
-                  }}
-                  interfaceConfig={{
-                    SHOW_JITSI_WATERMARK: false,
-                    SHOW_WATERMARK_FOR_GUESTS: false,
-                    MOBILE_APP_PROMO: false,
-                    HIDE_INVITE_MORE_HEADER: true,
-                    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-                  }}
-                  jwt={localStorage.getItem('token')}
-                />
+              )}
+            </div>
+            
+            {showInviteModal && (
+              <div className="invite-modal-overlay" onClick={() => setShowInviteModal(false)}>
+                <div className="invite-modal" onClick={(e) => e.stopPropagation()}>
+                  <div className="invite-modal-header">
+                    <h3>Invite Others to Video Session</h3>
+                    <button className="close-modal-btn" onClick={() => setShowInviteModal(false)}>
+                      <X size={20} />
+                    </button>
+                  </div>
+                  <div className="invite-modal-content">
+                    <p>Share this link with group members to join the video session:</p>
+                    <div className="invite-link-container">
+                      <input 
+                        type="text" 
+                        value={inviteLink} 
+                        readOnly 
+                        className="invite-link-input"
+                      />
+                      <button className="copy-button" onClick={copyInviteLink}>
+                        <Copy size={16} />
+                        Copy
+                      </button>
+                    </div>
+                    <p className="invite-note">
+                      Group members can join by clicking "Join Video Session" on this page.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showVideoSession && roomName && (
+              <div className="video-session-container">
+                <div className="video-session-header">
+                  <h3>Video Session - {group.name}</h3>
+                  <div className="video-session-actions">
+                    <button 
+                      className="invite-in-session-button" 
+                      onClick={() => setShowInviteModal(true)}
+                    >
+                      <Share2 size={16} />
+                      Invite
+                    </button>
+                    <button 
+                      className="close-video-button" 
+                      onClick={handleEndSession}
+                    >
+                      <X size={16} />
+                      End Session
+                    </button>
+                  </div>
+                </div>
+                <div className="jitsi-container">
+                  <Jitsi
+                    roomName={roomName}
+                    displayName={localStorage.getItem('username') || 'User'}
+                    onAPILoad={handleJitsiReady}
+                    onError={handleJitsiError}
+                    containerStyle={{ width: '100%', height: '600px', minHeight: '500px' }}
+                    config={{
+                      startWithAudioMuted: false,
+                      startWithVideoMuted: false, // Start with video ON
+                      prejoinPageEnabled: true, // Enable prejoin to show local video preview
+                      disableDeepLinking: true,
+                      enableWelcomePage: false,
+                      enableClosePage: false,
+                      defaultLanguage: 'en',
+                      enableLayerSuspension: true,
+                      enableNoAudioDetection: true,
+                      enableNoisyMicDetection: true,
+                      enableTalkWhileMuted: false,
+                      enableRemb: true,
+                      enableTcc: true,
+                      useStunTurn: true,
+                      // Video constraints - ensure camera is requested
+                      constraints: {
+                        video: {
+                          height: { ideal: 720, max: 1080, min: 240 },
+                          width: { ideal: 1280, max: 1920, min: 320 },
+                          facingMode: 'user' // Use front-facing camera
+                        }
+                      },
+                      resolution: 720,
+                      disableThirdPartyRequests: false,
+                      // Prejoin config - ensure video is visible
+                      prejoinConfig: {
+                        enabled: true,
+                        hideDisplayName: false,
+                        hideExtraJoinButtons: false,
+                        // Ensure video is enabled on prejoin page
+                        startWithVideoMuted: false,
+                        startWithAudioMuted: false
+                      },
+                      // Ensure local video is always shown
+                      localVideo: {
+                        enabled: true
+                      },
+                      // Additional settings to ensure video is visible
+                      enableLocalVideoFlip: true,
+                      disableRemoteVideoFlip: false
+                    }}
+                    interfaceConfig={{
+                      SHOW_JITSI_WATERMARK: false,
+                      SHOW_WATERMARK_FOR_GUESTS: false,
+                      MOBILE_APP_PROMO: false,
+                      HIDE_INVITE_MORE_HEADER: false,
+                      DISABLE_JOIN_LEAVE_NOTIFICATIONS: false,
+                      TOOLBAR_BUTTONS: [
+                        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+                        'fodeviceselection', 'hangup', 'profile', 'chat', 'settings',
+                        'videoquality', 'filmstrip', 'feedback', 'stats', 'shortcuts',
+                        'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone', 'security'
+                      ],
+                      SETTINGS_SECTIONS: ['devices', 'language', 'moderator', 'profile'],
+                      VIDEO_QUALITY_LABEL_DISABLED: false,
+                      VIDEO_QUALITY_LABEL_ENABLED: true,
+                    }}
+                  />
+                </div>
               </div>
             )}
 
