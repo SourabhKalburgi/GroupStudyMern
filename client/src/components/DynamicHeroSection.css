@@ -251,7 +251,9 @@
   flex: 1;
   text-align: center;
   text-decoration: none !important;
-  cursor: pointer
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
 }
 
 .button-content {
