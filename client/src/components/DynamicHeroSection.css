@@ -250,6 +250,8 @@
   white-space: nowrap;
   flex: 1;
   text-align: center;
+  text-decoration: none !important;
+  cursor: pointer
 }
 
 .button-content {
