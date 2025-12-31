@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Video, Calendar, Book, Lightbulb, Users, Calculator, Atom, Rocket, PenTool } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import Modal from './Modal';
 import './DynamicHeroSection.css';
 
 const features = [
   { text: "Live Video Chat", color: "#8B5CF6", icon: Video, description: "Connect face-to-face with study partners" },
-  { text: "Smart Scheduling", color: "#3B82F6", icon: Calendar, description: "AI-powered time management" },
   { text: "AI Tutor Assist", color: "#EC4899", icon: Lightbulb, description: "24/7 intelligent learning support" },
   { text: "Find Study Buddies", color: "#10B981", icon: Users, description: "Match with perfect study partners" }
 ];
@@ -15,6 +16,9 @@ const studyIcons = [Calculator, Atom, Rocket, PenTool, Book];
 const DynamicHeroSection = () => {
   const [currentFeature, setCurrentFeature] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,6 +27,13 @@ const DynamicHeroSection = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const handleCreateGroupClick = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      setShowAuthModal(true);
+    }
+  };
 
   return (
     <div className="hero-container">
@@ -49,8 +60,7 @@ const DynamicHeroSection = () => {
             <div className="title-glow"></div>
             
             <p className="subtitle">
-              Transform your learning experience with<br className="hide-mobile" />
-              AI-powered collaborative study tools
+              Transform your learning experience
             </p>
           </div>
 
@@ -85,7 +95,11 @@ const DynamicHeroSection = () => {
                 <Users size={18} className="button-icon" />
               </span>
             </Link>
-            <Link to="/create-group" className="action-button secondary glass-effect">
+            <Link 
+              to="/create-group" 
+              className="action-button secondary glass-effect"
+              onClick={handleCreateGroupClick}
+            >
               <span className="button-content">
                 Create a Group
                 <Rocket size={18} className="button-icon" />
@@ -111,6 +125,15 @@ const DynamicHeroSection = () => {
           ))}
         </div>
       </div>
+
+      <Modal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={() => {
+          setShowAuthModal(false);
+          navigate('/auth');
+        }}
+      />
     </div>
   );
 };
