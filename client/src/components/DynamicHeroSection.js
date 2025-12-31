@@ -29,8 +29,10 @@ const DynamicHeroSection = () => {
   }, []);
 
   const handleCreateGroupClick = (e) => {
-    if (!isLoggedIn) {
-      e.preventDefault();
+    e.preventDefault();
+    if (isLoggedIn) {
+      navigate('/create-group');
+    } else {
       setShowAuthModal(true);
     }
   };
@@ -95,16 +97,15 @@ const DynamicHeroSection = () => {
                 <Users size={18} className="button-icon" />
               </span>
             </Link>
-            <Link 
-              to="/create-group" 
-              className="action-button secondary glass-effect"
+            <button 
               onClick={handleCreateGroupClick}
+              className="action-button secondary glass-effect"
             >
               <span className="button-content">
                 Create a Group
                 <Rocket size={18} className="button-icon" />
               </span>
-            </Link>
+            </button>
           </div>
         </div>
 
